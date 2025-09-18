@@ -20,8 +20,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:4000",
-      "gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
-      "gitpro-nu.vercel.app"
+      "https://gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
+      "https://gitpro-nu.vercel.app"
     ],
     credentials: true,
   },
