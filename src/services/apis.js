@@ -1,4 +1,4 @@
-const BASE_URL = "https://chatpro-15j9.onrender.com";
+const BASE_URL = "https://chatpro-15j9.onrender.com/api/v1";
 
 export const authEndpoints = {
   SIGNUP_API: BASE_URL + "/signup",
