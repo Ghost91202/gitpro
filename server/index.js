@@ -13,7 +13,6 @@ import { v4 as uuidv4 } from "uuid";
 import { getSockets } from "./utils/features.js";
 import cors from "cors";
 
-
 const server = createServer(app);
 
 const io = new Server(server, {
@@ -21,7 +20,7 @@ const io = new Server(server, {
     origin: [
       "http://localhost:4000",
       "https://gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
-      "https://gitpro-nu.vercel.app"
+      "https://gitpro-nu.vercel.app",
     ],
     credentials: true,
   },
@@ -32,34 +31,30 @@ const io = new Server(server, {
 // })
 app.set("io", io);
 
-
 app.get("/", (req, res) => {
   console.log("connected to server");
   return res.json({
     success: true,
-    message: "Backend is working"
+    message: "Backend is working",
   });
 });
-
 
 import userRoutes from "./routes/User.js";
 import chatRoutes from "./routes/Chat.js";
 
 const PORT = process.env.PORT || 3000;
 
-import {cloudinaryConnect} from "./config/cloudinaryConfig.js"
+import { cloudinaryConnect } from "./config/cloudinaryConfig.js";
 import { socketAuth } from "./middlewares/auth.js";
 
 cloudinaryConnect();
-
-
 
 app.use(
   cors({
     origin: [
       "http://localhost:4000",
-      "gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
-      "gitpro-nu.vercel.app"
+      "https://gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
+      "https://gitpro-nu.vercel.app",
     ],
     credentials: true,
   })
@@ -83,8 +78,6 @@ export const userSocketIds = new Map();
 //  next();
 // });
 
-
-
 io.use((socket, next) => {
   cookieParser()(socket.request, socket.request.res, async (err) => {
     try {
@@ -101,19 +94,17 @@ io.use((socket, next) => {
   });
 });
 
-
-
 const onlineUsers = new Set();
 io.on("connection", (socket) => {
   const user = socket.user;
- //console.log("USER: ",user);
+  //console.log("USER: ",user);
 
-   onlineUsers.add(user._id.toString());
-   io.emit("ONLINE_USERS", Array.from(onlineUsers));
+  onlineUsers.add(user._id.toString());
+  io.emit("ONLINE_USERS", Array.from(onlineUsers));
 
   userSocketIds.set(user._id.toString(), socket.id);
 
- // console.log("user connected", userSocketIds);
+  // console.log("user connected", userSocketIds);
 
   socket.on("NEW_MESSAGE", async ({ chatId, members, message }) => {
     //console.log("MESSAGE: ",message);
@@ -131,12 +122,11 @@ io.on("connection", (socket) => {
       content: message,
       sender: user._id,
       chat: chatId,
-
     };
 
     const membersSocket = getSockets(members);
 
-   // console.log("EMITTING", messageForRealTime);
+    // console.log("EMITTING", messageForRealTime);
     io.to(membersSocket).emit("NEW_MESSAGE", {
       chatId: chatId,
       message: messageForRealTime,
@@ -146,24 +136,22 @@ io.on("connection", (socket) => {
     });
 
     await Message.create(messageForDb);
-
   });
 
-  socket.on("START_TYPING",({members,chatId})=>{
-
+  socket.on("START_TYPING", ({ members, chatId }) => {
     const membersSocket = getSockets(members);
-    socket.to(membersSocket).emit("START_TYPING",{chatId})
-  })
-   socket.on("STOP_TYPING", ({ members, chatId }) => {
-     const membersSocket = getSockets(members);
-     socket.to(membersSocket).emit("STOP_TYPING", { chatId });
-   });
+    socket.to(membersSocket).emit("START_TYPING", { chatId });
+  });
+  socket.on("STOP_TYPING", ({ members, chatId }) => {
+    const membersSocket = getSockets(members);
+    socket.to(membersSocket).emit("STOP_TYPING", { chatId });
+  });
 
   socket.on("disconnect", (reason) => {
     userSocketIds.delete(user._id.toString());
     //console.log("User disconnected. Reason:", reason); // Log reason
-      onlineUsers.delete(user._id.toString());
-      io.emit("ONLINE_USERS", Array.from(onlineUsers));
+    onlineUsers.delete(user._id.toString());
+    io.emit("ONLINE_USERS", Array.from(onlineUsers));
   });
 });
 
