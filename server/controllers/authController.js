@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
   const { name, userName, password, bio, email } = req.body;
   const file = req.file;
   //console.log("file............................... -> ", file);
- 
+
   // Check for required fields
   if (!name || !userName || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -77,7 +77,7 @@ export const signup = async (req, res) => {
       maxAge: 15 * 24 * 60 * 60 * 1000,
       secure: true,
       sameSite: "none",
-    }; 
+    };
 
     // Remove password from response
     newUser.password = undefined;
@@ -91,7 +91,7 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
    console.error("Error signing up:", error);
-    res.status(500).json({ message: "Error signing up" }); 
+    res.status(500).json({ message: "Error signing up" });
   }
 };
 
@@ -125,6 +125,7 @@ export const login = async (req, res) => {
       id: user._id,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET);
+    console.log(token);
 
     // Set the token in cookie
     const cookieOptions = {
