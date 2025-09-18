@@ -20,9 +20,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:4000",
-      "https://chatter-box-git-main-vishal790s-projects.vercel.app",
-      "https://chatter-nep95kcwo-vishal790s-projects.vercel.app",
-      "https://chatter-box-rust.vercel.app",
+      "gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
+      "gitpro-nu.vercel.app"
     ],
     credentials: true,
   },
@@ -59,7 +58,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:4000",
-
+      "gitpro-kpfa1wwli-ghost91202s-projects.vercel.app",
+      "gitpro-nu.vercel.app"
     ],
     credentials: true,
   })
